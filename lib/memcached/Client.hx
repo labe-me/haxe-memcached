@@ -27,6 +27,7 @@ package memcached;
 
 // temporary import, fix haxe 2.0 missing Type information, nicolas will re-add 
 // this to neko/Boot.hx soon
+import haxe.io.Bytes;
 import Type;
 
 /**
@@ -70,8 +71,8 @@ class Client {
 	// use neko.Lib.serialize and neko.Lib.localUnserialize by default but
 	// you may prefer to use haxe.Serializer.run and haxe.Unserializer.run
 	// or anything else like json to communicate with other applications
-	public var serialize : Dynamic -> String;
-	public var unserialize : String -> Dynamic;
+	public var serialize : Dynamic -> Bytes;
+	public var unserialize : Bytes -> Dynamic;
 	public var timeout : Float;
 
 	public function new( ?host:String, ?port:Int ){
@@ -111,7 +112,7 @@ class Client {
 			return false;
 		var data = serialize(any);
 		var res = false;
-		try res = cnx.set(key, neko.Lib.bytesReference(data), expiresSeconds) catch (e:Dynamic) cnx = null;
+		try res = cnx.set(key, data, expiresSeconds) catch (e:Dynamic) cnx = null;
 		return res;
 	}
 
@@ -121,14 +122,23 @@ class Client {
 		try res = cnx.get(key) catch(e:Dynamic) cnx=null;
 		if (res == null)
 			return null;
-		return unserialize(neko.Lib.stringReference(res.data));
+		
+		try
+		{
+			return unserialize(res.data);
+		}
+		catch (e:Dynamic)
+		{
+			trace(e);
+			return null;
+		}
 	}
 
 	public function add( key:String, any:Dynamic, ?expiresSeconds:Int ) : Bool {
 		if (cnx == null) return false;
 		var data = serialize(any);
 		var res = false;
-		try res = cnx.add(key, neko.Lib.bytesReference(data), expiresSeconds) catch (e:Dynamic) cnx = null;
+		try res = cnx.add(key, data, expiresSeconds) catch (e:Dynamic) cnx = null;
 		return res;
 	}
 
@@ -136,7 +146,7 @@ class Client {
 		if (cnx == null) return false;
 		var data = serialize(any);
 		var res = false;
-		try res = cnx.replace(key, neko.Lib.bytesReference(data), expiresSeconds) catch (e:Dynamic) cnx = null;
+		try res = cnx.replace(key, data, expiresSeconds) catch (e:Dynamic) cnx = null;
 		return res;
 	}
 
