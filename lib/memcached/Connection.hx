@@ -178,7 +178,9 @@ class Connection {
 			return null;
 		var size = Std.parseInt(parts[3]);
 		var item = { key:parts[1], data:haxe.io.Bytes.alloc(size) };
-		socket.input.readBytes(item.data, 0, size);
+		var len = 0;
+		while (len < size)
+			len += socket.input.readBytes(item.data, len, size - len);
 		socket.input.readByte();
 		socket.input.readByte();
 		return item;
