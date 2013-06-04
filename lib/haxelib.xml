@@ -1,7 +1,5 @@
-<project name="memcached" url="https://svn.motion-twin.com/memcached" license="BSD">
-	<user name="mtwin"/>
+<project name="memcached" url="https://github.com/labe-me/haxe-memcached" license="BSD">
+	<user name="memcached"/>
 	<description>memcached library for haxe/neko.</description>
-	<version name="0.9">
-	- fixed default Client socket timeout
-	</version>
+	<version name="1.0">See git change log</version>
 </project>

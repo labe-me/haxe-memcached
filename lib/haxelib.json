@@ -1,0 +1,7 @@
+{
+    "name":"memcached",
+    "url":"https://github.com/labe-me/haxe-memcached",
+    "license":"BSD",
+	"description":"Memcached library for haxe/neko.",
+    "version":"1.0"
+}
